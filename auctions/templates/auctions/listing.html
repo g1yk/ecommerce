@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h1>Listing</h1>
+
+<h3> {{listing.title}} </h3>
+
+<ul>
+    <li>${{listing.price}}</li>
+    <li><img src="{{listing.photo.url}}" weight=350px height=350px></li>
+    <li>{{listing.description}}</li>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <li>
+            <p>The current bid is ${{listing.price}} made by {{listing.user}}</p>
+            <p>Enter your Bid</p>
+            <input type="number" name="amount">
+            <input type="submit" value="Post">
+            
+            {% if message %}
+                {{message}}
+            {% endif %}
+        </li>
+
+    </form>
+</ul>
+
+
+<a href="{% url 'index' %}"> Back to Home page</a>
+{% endblock %}
