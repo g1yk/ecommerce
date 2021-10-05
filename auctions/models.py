@@ -1,8 +1,11 @@
+from datetime import time
 from os import name
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.fields import related
 from django.urls import reverse
+from django.utils import timezone
+
 
 
 class User(AbstractUser):
@@ -36,8 +39,23 @@ class Listing(models.Model):
     photo = models.ImageField()
     # image_url = models.URLField(blank=true)
     bid = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    category = models.ManyToManyField(Category, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="users", default=1)
+    category = models.ManyToManyField(Category, default=None, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField()
+    listing_status = models.CharField(max_length=16, default="disabled")
+
 
     def __str__(self):
         return self.title
+
+
+
+class Comment(models.Model):
+    listing =  models.ForeignKey(Listing, related_name="comments", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="commenters", on_delete=models.CASCADE, default=1)
+    body = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s - %s' % (self.listing.title, self.user)

@@ -1,63 +1,89 @@
-from auctions.forms import BidForm, ListingForm
+from auctions.forms import BidForm, CommentForm, ListingForm
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Category, User, Listing
+from .models import Category, Comment, User, Listing
 
 
 def index(request):
-    category = None
-    categories = Category.objects.all()
-
+    
     return render(request, "auctions/index.html",{
-        "listings":Listing.objects.all(),
-        "category":Category.objects.all()
+        "listings":Listing.objects.all()
     })
+
 
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     message = ""
+    comments = listing.comments.filter()
+    new_comment = None
 
     if request.method == "POST":
-        form = BidForm(request.POST)
-        if form.is_valid():
-            bid = form.cleaned_data['amount']
-            print(form.cleaned_data)
-            if listing.price >= bid:
-                message = "Your bid is lower than the last bid"
+        
+        if request.POST.get('amount'):
+            form = BidForm(request.POST)
+            if form.is_valid():
+                bid = form.cleaned_data['amount']
+                print(form.cleaned_data)
+                if listing.price >= bid:
+                    message = "Your bid is lower than the last bid"
+                else:
+                    listing.price = bid
+                    listing.user = request.user
+                    listing.save()
+
+                    print('USER: ', listing.user, request.user)
+                return render(request, 'auctions/listing.html', {
+                    "listing":listing,
+                    "bid":bid,
+                    "message":message
+                })
+        if request.POST.get('body'):
+           
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.listing = listing
+                new_comment.user = request.user
+                new_comment.save()
             else:
-                listing.price = bid
-                listing.user = request.user
-                listing.save()
-            return render(request, 'auctions/listing.html', {
-                "listing":listing,
-                "bid":bid,
-                "message":message
-            })
+                comment_form = CommentForm()
 
     return render(request, 'auctions/listing.html', {
-        "listing":listing
+        "listing":listing,
+        'comments':comments,
+        'new_comment':new_comment
     })
 
-# def bid_update(request):
+def add_comment(request):
+    if request.method == "POST":
+        print("YAY")
+        pass
   
 
-
 def add_listing(request):
-    
     if request.method == "POST":
         form = ListingForm(request.POST, request.FILES)
+        print('FORM CREATED')
+        print(form.is_valid())
         if form.is_valid():
+            print('FORM IS VALID')
             print(form.cleaned_data)
-            new_listing = form.save()
-            return HttpResponseRedirect(reverse(listing, args={new_listing.pk,}))
+            new_listing = form.save(commit=False)
+            print('PRINTING LISTING DETAILS ', new_listing.id, new_listing.pk)
+            # return listing(request, new_listing.pk)
+            return HttpResponseRedirect(reverse('listing', new_listing.pk,))
+        else:
+            return render(request, "auctions/new.html",{
+                'category':Category.objects.all()
+            })
     else:
         return render(request, "auctions/new.html",{
-            "category":Category.objects.all()
+            'category':Category.objects.all()
         })
 
 

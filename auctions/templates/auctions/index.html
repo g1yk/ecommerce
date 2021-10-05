@@ -9,7 +9,7 @@
 
 <h3>All listings</h3>
 
-<h4>Choose category</h4> 
+<!-- <h4>Choose category</h4> 
 
 <form action="{% url 'index' %}" method="POST"></form>
 <select name="category" id="">
@@ -23,18 +23,19 @@
 
 <h4>You have choosed {{choosed_category}}</h4>
 
-{% endif %}
+{% endif %} -->
 
 
 
-<!-- 
+
         <div class="d-flex justify-content-between container mt-5">
             {% for list in listings %}
             <div class="card p-3 bg-white"><i class="fa fa-apple"></i>
 
                 <div class="about-product text-center mt-2"><img src="{{ list.photo.url }}" height="300" width="300">
                     <div>
-                        <h4>{{ list.title }}</h4>
+                        <a href="{% url 'listing' list.id %}">
+                        <h4>{{ list.title }}</h4></a>
                     </div>
                 </div>
         
@@ -44,7 +45,7 @@
             {% empty %}
                 <li>No listings</li>
                 {% endfor %}
-        </div> -->
+        </div>
 
 
 

@@ -4,14 +4,17 @@
 
 <h2>Create a new listing</h2>
 
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="" method="POST" name="listing" enctype="multipart/form-data">
     {% csrf_token %}
     <h4>Title</h4>
     <input type="text" name="title">
 
+    <input type='hidden' value='{{listing.pk}}' name='pk'>
+
+
     <h4>Choose category</h4>
 
-    <select name="" id="">
+    <select name="category" id="">
         {% for type in category %}
         <option value="{{ type }}" name="category">{{ type }}</option>
         {% endfor %}
@@ -27,11 +30,14 @@
     <h4>Photo</h4>
     <input type="file"  accept="image/*" name="photo" id="file">
 
+    <br>
+    <h4>Auction ending date</h4>
+
+    <input type="date" id="start" name="end_date">
+    <br>
+
     <!-- <p>Or provide URL of image</p>
-
     <input type="text" name="image_url"/> -->
-
-
 
     <input type="submit" value="Post"/>
 

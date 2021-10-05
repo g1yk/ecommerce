@@ -26,6 +26,50 @@
     </form>
 </ul>
 
+<h2>Add comment </h2>
+
+<form action="" method="POST" name="body">
+    {% csrf_token %}
+    
+    <input type="body" name="body">
+    <input type="submit" value="Post">
+
+</form>
+
+<h2>Comments...</h2>
+
+
+<!-- {% if new_comment %} 
+
+{% for comment in comments %} 
+
+{{comment.user}} - {{comment.date_added}}
+<br>
+{{comment.body}}
+<br>
+
+{% endfor %}
+
+{%else%} 
+
+No comments <a href="#">Add comment</a>
+
+{% endif %} -->
+
+
+{% if not comments %}
+
+    No comments <a href="#">Add comment</a>
+{% else %}
+    {% for comment in comments %}
+        {{comment.user}} - {{comment.date_added}}
+        <br>
+        {{comment.body}}
+        <br>
+    {% endfor %}
+{% endif %}
+    
+
 
 <a href="{% url 'index' %}"> Back to Home page</a>
 {% endblock %}
