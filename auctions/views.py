@@ -4,6 +4,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import date
+from django.utils import timezone
+
 
 from .models import Category, Comment, ListingStatus, User, Listing
 
@@ -14,7 +17,8 @@ def index(request):
         "listings":Listing.objects.all()
     })
 
-
+def is_past_due(self):
+    return date.today() > self.date
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
@@ -22,6 +26,8 @@ def listing(request, listing_id):
     message = ""
     comments = listing.comments.filter()
     new_comment = None
+
+    print('IS PAST?? ', 'Ending date ', listing.end_date, 'Created at ', listing.created_at)
 
     if request.method == "POST":
         
@@ -75,15 +81,14 @@ def add_listing(request):
             new_listing = form.save(commit=False)
             new_listing.user = request.user
             new_listing.listing_status = "enabled"
+            #  Applying time
+            new_listing.end_date = new_listing.end_date.replace(hour=new_listing.created_at.hour, minute=new_listing.created_at.minute, second=new_listing.created_at.second)
+
             new_listing.save()
 
             listing_status = ListingStatus(listing=new_listing, status = "Enabled")
             listing_status.save()
-            print('LISTING STATUS ', listing_status.pk)
 
-            # listing_status = ListingStatus.objects.get(pk=new_listing.pk)
-            # listing_status.status = 'Enabled'
-            # listing_status.save()
 
             return HttpResponseRedirect(reverse('listing', args=(new_listing.pk,)))
         else:
@@ -114,6 +119,11 @@ def login_view(request):
             })
     else:
         return render(request, "auctions/login.html")
+
+
+
+
+
 
 
 def logout_view(request):
