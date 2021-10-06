@@ -3,18 +3,11 @@ from django.contrib.auth import models
 from django.db.models import fields
 
 
-from .models import Category, Comment, User, Listing, Bid
+from .models import Category, Comment, ListingStatus, User, Listing, Bid
 
 
 
-class DateForm(forms.Form):
-    date = forms.DateTimeField(
-        input_formats=['%d/%m/%Y %H:%M'],
-        widget=forms.DateTimeInput(attrs={
-            'class': 'form-control datetimepicker-input',
-            'data-target': '#datetimepicker1'
-        })
-    )
+
 
 class ListingForm(forms.ModelForm):
     category = forms.CharField()
@@ -27,11 +20,10 @@ class ListingForm(forms.ModelForm):
             "description",
             "price",
             "photo",
-            "category"
+            "category",
+            "end_date"
         ]
-        widgets = {
-            "end_date": DateForm()
-        }
+    
 
     def save(self, commit=True):
         category, created = Category.objects.get_or_create(
@@ -64,3 +56,9 @@ class CommentForm(forms.ModelForm):
             'body'
         ]
 
+# class ListingStatusForm(forms.ModelForm):
+#     class Meta:
+#         model = ListingStatus
+#         fields = [
+
+#         ]

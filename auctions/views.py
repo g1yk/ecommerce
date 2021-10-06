@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Category, Comment, User, Listing
+from .models import Category, Comment, ListingStatus, User, Listing
 
 
 def index(request):
@@ -18,6 +18,7 @@ def index(request):
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
+    listing_status = ListingStatus.objects.get(listing=listing)
     message = ""
     comments = listing.comments.filter()
     new_comment = None
@@ -54,6 +55,7 @@ def listing(request, listing_id):
                 comment_form = CommentForm()
 
     return render(request, 'auctions/listing.html', {
+        'listing_status':listing_status,
         "listing":listing,
         'comments':comments,
         'new_comment':new_comment
@@ -68,15 +70,22 @@ def add_comment(request):
 def add_listing(request):
     if request.method == "POST":
         form = ListingForm(request.POST, request.FILES)
-        print('FORM CREATED')
         print(form.is_valid())
         if form.is_valid():
-            print('FORM IS VALID')
-            print(form.cleaned_data)
             new_listing = form.save(commit=False)
-            print('PRINTING LISTING DETAILS ', new_listing.id, new_listing.pk)
-            # return listing(request, new_listing.pk)
-            return HttpResponseRedirect(reverse('listing', new_listing.pk,))
+            new_listing.user = request.user
+            new_listing.listing_status = "enabled"
+            new_listing.save()
+
+            listing_status = ListingStatus(listing=new_listing, status = "Enabled")
+            listing_status.save()
+            print('LISTING STATUS ', listing_status.pk)
+
+            # listing_status = ListingStatus.objects.get(pk=new_listing.pk)
+            # listing_status.status = 'Enabled'
+            # listing_status.save()
+
+            return HttpResponseRedirect(reverse('listing', args=(new_listing.pk,)))
         else:
             return render(request, "auctions/new.html",{
                 'category':Category.objects.all()
