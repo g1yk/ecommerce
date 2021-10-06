@@ -6,6 +6,19 @@
 
 <h2> {{listing_status.status}} </h2>
 
+{% if listing_status.status == 'Disabled' %}
+<h1> This listing has been ended </h1>
+
+
+<ul>
+    <li>${{listing.price}}</li>
+    <li><img src="{{listing.photo.url}}" weight=350px height=350px></li>
+    <li>{{listing.description}}</li>
+</ul>
+
+
+{% else %}
+
 <h3> {{listing.title}} </h3>
 
 <ul>
@@ -71,7 +84,7 @@ No comments <a href="#">Add comment</a>
     {% endfor %}
 {% endif %}
     
-
+{% endif %}
 
 <a href="{% url 'index' %}"> Back to Home page</a>
 {% endblock %}
