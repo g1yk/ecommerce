@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from datetime import date
 from django.utils import timezone
+from datetime import datetime
+
 
 
 from .models import Category, Comment, ListingStatus, User, Listing
@@ -27,7 +29,15 @@ def listing(request, listing_id):
     comments = listing.comments.filter()
     new_comment = None
 
-    print('IS PAST?? ', 'Ending date ', listing.end_date, 'Created at ', listing.created_at)
+    print('IS PAST?? ', 'Ending date ', listing.end_date, 'Now ', timezone.now())
+    print(listing.end_date.hour, timezone.now().hour)
+    days_left = listing.end_date.day - datetime.now().day
+    hours_left = listing.end_date.hour - timezone.now().hour
+    minutes_left = listing.end_date.minute - timezone.now().minute
+    seconds_left = listing.end_date.second - timezone.now().second
+
+
+    print(f'{days_left} Days left, {hours_left} hours and {minutes_left} minutes and {seconds_left} seconds.')
 
     if request.method == "POST":
         
