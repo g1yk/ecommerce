@@ -4,6 +4,15 @@
 
 <h1>Listing</h1>
 
+{% if listing.user == request.user %}
+    <form action="{% url 'close_listing' listing.pk %}" method="POST" name="close_listing">
+        {% csrf_token %}
+        
+        <input type="submit" value="Close listing" name="close_listing">
+
+    </form>
+{% endif %}
+
 <h2> {{listing_status.status}} </h2>
 
 {% if listing_status.status == 'Disabled' %}

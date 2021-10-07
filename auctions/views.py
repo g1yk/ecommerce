@@ -110,6 +110,17 @@ def add_listing(request):
             'category':Category.objects.all()
         })
 
+def close_listing(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    listing_status = ListingStatus.objects.get(listing=listing)
+
+    if request.method == "POST":
+        print('hello')
+    
+    return render(request, 'auctions/listing.html', {
+            "listing":listing,
+        })
+
 
 def login_view(request):
     if request.method == "POST":
