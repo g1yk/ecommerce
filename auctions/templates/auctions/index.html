@@ -25,27 +25,37 @@
 
 {% endif %} -->
 
+{% comment %} 
+{% for status in statuses %}
+
+{{status.listing.title}}
+
+{{status.listing.price}}
+
+{{status.listing.photo.url}}
+
+{% endfor %} {% endcomment %}
 
 
 
-        <div class="d-flex justify-content-between container mt-5">
-            {% for list in listings %}
+     <div class="d-flex justify-content-between container mt-5">
+        {% for status in statuses %}
             <div class="card p-3 bg-white"><i class="fa fa-apple"></i>
 
-                <div class="about-product text-center mt-2"><img src="{{ list.photo.url }}" height="300" width="300">
+                <div class="about-product text-center mt-2"><img src="{{status.listing.photo.url}}" height="300" width="300">
                     <div>
-                        <a href="{% url 'listing' list.id %}">
-                        <h4>{{ list.title }}</h4></a>
+                        <a href="{% url 'listing' status.listing.id %}">
+                        <h4>{{ status.listing.title }}</h4></a>
                     </div>
                 </div>
         
                 <div class="d-flex justify-content-between total font-weight-bold mt-4">
-                    <span>Price</span><span>${{list.price}}</span></div>
+                    <span>Price</span><span>${{status.listing.price}}</span></div>
             </div>
             {% empty %}
                 <li>No listings</li>
                 {% endfor %}
-        </div>
+        </div>   
 
 
 

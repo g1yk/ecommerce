@@ -18,6 +18,9 @@
 {% if listing_status.status == 'Disabled' %}
 <h1> This listing has been ended </h1>
 
+<h3> You sold {{listing.title}} for ${{listing.price}} to 
+user {{listing.user}} </h3>
+
 
 <ul>
     <li>${{listing.price}}</li>

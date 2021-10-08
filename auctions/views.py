@@ -16,7 +16,8 @@ from .models import Category, Comment, ListingStatus, User, Listing
 def index(request):
     
     return render(request, "auctions/index.html",{
-        "listings":Listing.objects.all()
+        "listings":Listing.objects.all(),
+        "statuses":ListingStatus.objects.filter(status="Enabled")
     })
 
 def is_past_due(self):
@@ -116,9 +117,13 @@ def close_listing(request, listing_id):
 
     if request.method == "POST":
         print('hello')
+        listing_status.status = "Disabled"
+        print(listing_status)
+        listing_status.save()
     
     return render(request, 'auctions/listing.html', {
             "listing":listing,
+            "listing_status":listing_status
         })
 
 
