@@ -4,7 +4,7 @@
 
 <h1>Listing</h1>
 
-{% if listing.user == request.user %}
+{% if listing.seller == request.user %}
     <form action="{% url 'close_listing' listing.pk %}" method="POST" name="close_listing">
         {% csrf_token %}
         
@@ -15,19 +15,31 @@
 
 <h2> {{listing_status.status}} </h2>
 
+
 {% if listing_status.status == 'Disabled' %}
-<h1> This listing has been ended </h1>
 
-<h3> You sold {{listing.title}} for ${{listing.price}} to 
-user {{listing.user}} </h3>
+    {% if listing.buyer == request.user %}
+
+        <h1> You won the auction</h1>
+
+        <h3> You bought {{listing.title}} for ${{listing.price}}  </h3>
+
+        {% else %}
+
+        <h1> This listing has been ended </h1>
+
+        <h3>  Sold {{listing.title}} for ${{listing.price}} to 
+        user {{listing.buyer}} </h3>
 
 
-<ul>
-    <li>${{listing.price}}</li>
-    <li><img src="{{listing.photo.url}}" weight=350px height=350px></li>
-    <li>{{listing.description}}</li>
-</ul>
+      
 
+    {% endif %}
+  <ul>
+            <li>${{listing.price}}</li>
+            <li><img src="{{listing.photo.url}}" weight=350px height=350px></li>
+            <li>{{listing.description}}</li>
+        </ul>
 
 {% else %}
 
@@ -37,10 +49,12 @@ user {{listing.user}} </h3>
     <li>${{listing.price}}</li>
     <li><img src="{{listing.photo.url}}" weight=350px height=350px></li>
     <li>{{listing.description}}</li>
+
+{% if user.is_authenticated %}
     <form action="" method="POST">
         {% csrf_token %}
         <li>
-            <p>The current bid is ${{listing.price}} made by {{listing.user}}</p>
+            <p>The current bid is ${{listing.price}} made by {{listing.bidder}}</p>
             <p>Enter your Bid</p>
             <input type="number" name="amount">
             <input type="submit" value="Post">
@@ -51,6 +65,7 @@ user {{listing.user}} </h3>
         </li>
 
     </form>
+{% endif %}
 </ul>
 
 <h2>Add comment </h2>

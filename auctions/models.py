@@ -43,9 +43,19 @@ class Listing(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="users", default=1
     )
+    buyer = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="buyers", blank=True, default=1
+    )
+    seller = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="sellers", blank=True, default=1
+    )
+    bidder = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="bidders", blank=True, default=1
+    )
     category = models.ManyToManyField(Category, default=None, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
+
 
     def __str__(self):
         return self.title

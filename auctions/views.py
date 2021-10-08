@@ -51,10 +51,9 @@ def listing(request, listing_id):
                     message = "Your bid is lower than the last bid"
                 else:
                     listing.price = bid
-                    listing.user = request.user
+                    listing.bidder = request.user
                     listing.save()
 
-                    print('USER: ', listing.user, request.user)
                 return render(request, 'auctions/listing.html', {
                     "listing":listing,
                     "bid":bid,
@@ -90,7 +89,7 @@ def add_listing(request):
         print(form.is_valid())
         if form.is_valid():
             new_listing = form.save(commit=False)
-            new_listing.user = request.user
+            new_listing.seller = request.user
             new_listing.listing_status = "enabled"
             #  Applying time
             new_listing.end_date = new_listing.end_date.replace(hour=new_listing.created_at.hour, minute=new_listing.created_at.minute, second=new_listing.created_at.second)
@@ -120,6 +119,8 @@ def close_listing(request, listing_id):
         listing_status.status = "Disabled"
         print(listing_status)
         listing_status.save()
+        listing.buyer = listing.bidder
+        listing.save()
     
     return render(request, 'auctions/listing.html', {
             "listing":listing,
