@@ -150,6 +150,12 @@ def login_view(request):
 
 
 
+def categories(request):
+    print("CATEGORIES")
+
+    return render(request, "auctions/categories.html", {
+                
+            })
 
 
 
