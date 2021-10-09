@@ -152,10 +152,20 @@ def login_view(request):
 
 def categories(request):
     print("CATEGORIES")
+    
 
     return render(request, "auctions/categories.html", {
-                
+                'categories':Category.objects.all(),
+                'listings':Listing.objects.all()
             })
+
+def categories_list(request, category):
+    category_id = Category.objects.get(name=category).id
+    
+    return render(request, "auctions/categories_list.html", {
+                'listings':Listing.objects.filter(category=category_id)
+            })
+
 
 
 

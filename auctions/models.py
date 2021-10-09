@@ -52,7 +52,7 @@ class Listing(models.Model):
     bidder = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="bidders", blank=True, default=1
     )
-    category = models.ManyToManyField(Category, default=None, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
 
@@ -70,6 +70,13 @@ class ListingStatus(models.Model):
     )
     status = models.CharField(max_length=8,choices=STATUS_CHOICES, default=DISABLED)
 
+class Watchlist(models.Model):
+    listing = models.ForeignKey(
+        Listing, on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        User, related_name="watchers", on_delete=models.CASCADE, default=1
+    )
 
 class Comment(models.Model):
     listing = models.ForeignKey(
