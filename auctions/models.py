@@ -26,7 +26,8 @@ class Category(models.Model):
     #  ordering = ('name',)
     #  verbose_name = 'category'
     #  verbose_name_plural = 'categories'
-
+    #
+    # test
     def __str__(self):
         return self.name
 
