@@ -32,7 +32,6 @@ class Category(models.Model):
         return self.name
 
 
-
 class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
@@ -57,9 +56,16 @@ class Listing(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
 
-
     def __str__(self):
         return self.title
+
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_watchlist")
+
+    def __str__(self):
+        return  return 'Memo={0}, Tag={1}'.format(self.memo, self.tags)
 
 
 class ListingStatus(models.Model):
@@ -69,7 +75,7 @@ class ListingStatus(models.Model):
     listing = models.ForeignKey(
         Listing, related_name="statuses", on_delete=models.CASCADE
     )
-    status = models.CharField(max_length=8,choices=STATUS_CHOICES, default=DISABLED)
+    status = models.CharField(max_length=8, choices=STATUS_CHOICES, default=DISABLED)
 
 
 class Comment(models.Model):
