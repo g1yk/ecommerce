@@ -65,7 +65,7 @@ class Watchlist(models.Model):
     item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_watchlist")
 
     def __str__(self):
-        return  return 'Memo={0}, Tag={1}'.format(self.memo, self.tags)
+        return 'User={0}, Listing={1}'.format(self.user, self.item)
 
 
 class ListingStatus(models.Model):

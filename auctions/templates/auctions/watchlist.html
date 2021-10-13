@@ -2,13 +2,28 @@
 
 {% block body %}
 
-   <h1>Hello!</h1>
 
-    {% for listing in list %}
-        {{ listing }}
-    {% endfor %}
+{% if list == None %} 
+
+        <h1>Listing has been removed from the watchlist!</h1>
 
 
-    {{ list }}
+    <h2>Go to <a href="{% url 'watchlist' %}">Watchlist</a></h2>
+   
+{% else %}
+
+    <h1>  Added to the watchlist!</h1>
+
+    <h2>Go to <a href="{% url 'watchlist' %}">Watchlist</a></h2>
+
+        {% for listing in list %}
+            <ul>
+                <li>${{listing.item.price}}</li>
+                <li><img src="{{listing.item.photo.url}}" weight=350px height=350px></li>
+                <li>{{listing.item.description}}</li>
+                </ul>
+        {% endfor %} 
+
+{% endif %}
 
 {% endblock %}

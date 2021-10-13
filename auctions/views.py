@@ -138,19 +138,36 @@ def watchlist(request):
 
 @login_required
 def add_watchlist(request, listing_id):
+    # list = None
+    message = ""
     if request.method == "POST":
         print('PRINTING LISTING ID ', listing_id)
 
         item = Listing.objects.get(id=listing_id)
-        print(item)
-        Watchlist.objects.create(
-            item=item,
-            user=request.user
-        )
         list = Watchlist.objects.filter(item=item, user=request.user)
 
+        if Watchlist.objects.filter(item=item, user=request.user):
+            Watchlist.objects.filter(item=item, user=request.user).delete()
+            message = 'Removed listing'
+            return render(request, 'auctions/watchlist.html', {
+                # 'list':list
+            })
+        else:
+            Watchlist.objects.create(
+                item=item,
+                user=request.user
+            )
+            message = 'Created listing'
+
+            print('list ', list)
+            return render(request, 'auctions/watchlist.html', {
+                'item':item,
+                'list':list
+            })
+
     return render(request, 'auctions/watchlist.html', {
-        'list':list
+        # 'list':list
+        'message':message
     })
 
 
