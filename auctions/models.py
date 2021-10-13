@@ -52,7 +52,8 @@ class Listing(models.Model):
     bidder = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="bidders", blank=True, default=1
     )
-    category = models.ManyToManyField(Category, default=None, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None, null=True)
+
     created_at = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
 
@@ -66,6 +67,7 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return 'User={0}, Listing={1}'.format(self.user, self.item)
+
 
 
 class ListingStatus(models.Model):

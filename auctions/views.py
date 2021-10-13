@@ -89,6 +89,7 @@ def add_listing(request):
         form = ListingForm(request.POST, request.FILES)
         print(form.is_valid())
         if form.is_valid():
+            print(form, form.category)
             new_listing = form.save(commit=False)
             new_listing.seller = request.user
             new_listing.listing_status = "enabled"
@@ -97,6 +98,7 @@ def add_listing(request):
                                                                 minute=new_listing.created_at.minute,
                                                                 second=new_listing.created_at.second)
 
+            # new_listing.category = 
             new_listing.save()
 
             listing_status = ListingStatus(listing=new_listing, status="Enabled")
@@ -193,11 +195,21 @@ def login_view(request):
 
 def categories(request):
     print("CATEGORIES")
+    
 
     return render(request, "auctions/categories.html", {
+                'categories':Category.objects.all(),
+                'listings':Listing.objects.all()
+            })
 
-    })
+def categories_list(request, category):
+    category_id = Category.objects.get(name=category).id
+    
+    return render(request, "auctions/categories_list.html", {
+                'listings':Listing.objects.filter(category=category_id),
+                 "statuses":ListingStatus.objects.filter(status="Enabled")   
 
+            })
 
 def logout_view(request):
     logout(request)
