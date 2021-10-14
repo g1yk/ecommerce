@@ -3,12 +3,13 @@ from django.contrib.auth.decorators import login_required
 from auctions.forms import BidForm, CommentForm, ListingForm
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, request
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from datetime import date
 from django.utils import timezone
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
 from .models import Category, Comment, ListingStatus, User, Listing, Watchlist
 
@@ -86,19 +87,18 @@ def add_comment(request):
 
 def add_listing(request):
     if request.method == "POST":
+        category = request.POST.get("category")
+
         form = ListingForm(request.POST, request.FILES)
-        print(form.is_valid())
+        # print(form.is_valid())
         if form.is_valid():
-            print(form, form.category)
+
             new_listing = form.save(commit=False)
             new_listing.seller = request.user
             new_listing.listing_status = "enabled"
             #  Applying time
-            new_listing.end_date = new_listing.end_date.replace(hour=new_listing.created_at.hour,
-                                                                minute=new_listing.created_at.minute,
-                                                                second=new_listing.created_at.second)
-
-            # new_listing.category = 
+            new_listing.end_date = new_listing.end_date.replace(hour=new_listing.created_at.hour, minute=new_listing.created_at.minute, second=new_listing.created_at.second)
+            new_listing.category = Category.objects.get(name=category)
             new_listing.save()
 
             listing_status = ListingStatus(listing=new_listing, status="Enabled")
@@ -106,8 +106,10 @@ def add_listing(request):
 
             return HttpResponseRedirect(reverse('listing', args=(new_listing.pk,)))
         else:
-            return render(request, "auctions/new.html", {
-                'category': Category.objects.all()
+            return render(request, "auctions/new.html",{
+                # 'category':Category.objects.all()
+                'category':Listing.category.all()
+
             })
     else:
         return render(request, "auctions/new.html", {

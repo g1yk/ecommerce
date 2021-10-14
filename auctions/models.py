@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 
+
 class User(AbstractUser):
     pass
 
@@ -53,7 +54,6 @@ class Listing(models.Model):
         User, on_delete=models.CASCADE, related_name="bidders", blank=True, default=1
     )
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None, null=True)
-
     created_at = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
 
@@ -80,9 +80,12 @@ class ListingStatus(models.Model):
     status = models.CharField(max_length=8, choices=STATUS_CHOICES, default=DISABLED)
 
 
+    def __str__(self):
+       return f"{self.user}'s WatchList"
+
 class Comment(models.Model):
-    listing = models.ForeignKey(
-        Listing, related_name="comments", on_delete=models.CASCADE
+    listing = models.ManyToManyField(
+        Listing, related_name="comments"
     )
     user = models.ForeignKey(
         User, related_name="commenters", on_delete=models.CASCADE, default=1

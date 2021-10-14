@@ -20,10 +20,9 @@ class ListingForm(forms.ModelForm):
             "description",
             "price",
             "photo",
-            "category",
             "end_date"
         ]
-    
+   
 
     def save(self, commit=True):
         category, created = Category.objects.get_or_create(
@@ -55,6 +54,13 @@ class CommentForm(forms.ModelForm):
         fields = [
             'body'
         ]
+
+# class WatchlistForm(forms.ModelForm):
+#     class Meta:
+#         model = Watchlist
+#         fields = [
+#             'listing'
+#         ]
 
 # class ListingStatusForm(forms.ModelForm):
 #     class Meta:
