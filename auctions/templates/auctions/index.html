@@ -41,8 +41,11 @@
      <div class="d-flex justify-content-between container mt-5">
         {% for status in statuses %}
             <div class="card p-3 bg-white"><i class="fa fa-apple"></i>
-
+                    {% if status.listing.photo.url != None %}
                 <div class="about-product text-center mt-2"><img src="{{status.listing.photo.url}}" height="300" width="300">
+                    {%else%}
+                <div class="about-product text-center mt-2"><img src="{{status.listing.image_url}}" height="300" width="300">
+                    {%endif%}
                     <div>
                         <a href="{% url 'listing' status.listing.id %}">
                         <h4>{{ status.listing.title }}</h4></a>

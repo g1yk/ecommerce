@@ -37,8 +37,8 @@ class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
     price = models.DecimalField(max_digits=24, decimal_places=2)
-    photo = models.ImageField()
-    # image_url = models.URLField(blank=true)
+    photo = models.ImageField(null=True)
+    image_url = models.CharField(max_length=1024, null=True)
     bid = models.ForeignKey(
         Bid, on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(
@@ -57,8 +57,27 @@ class Listing(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_file_or_url",
+                check=(
+                    models.Q(photo__isnull=True, image_url__isnull=False)
+                    | models.Q(photo__isnull=False, image_url__isnull=True)
+                ),
+            )
+        ]
+
     def __str__(self):
         return self.title
+        
+
+# class Image(models.Model):
+#     photo = models.ImageField(null=True)
+#     image_url = models.CharField(max_length=1024, null=True)
+#     item_url = models.CharField(max_length=124, null=True)
+#     item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_photo")
+
 
 
 class Watchlist(models.Model):

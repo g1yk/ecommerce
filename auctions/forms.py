@@ -20,6 +20,7 @@ class ListingForm(forms.ModelForm):
             "description",
             "price",
             "photo",
+            "image_url",
             "end_date"
         ]
    

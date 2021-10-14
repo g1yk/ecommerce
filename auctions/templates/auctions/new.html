@@ -1,5 +1,10 @@
 {% extends "auctions/layout.html" %} 
 
+
+
+
+
+
 {% block body %} 
 
 <h2>Create a new listing</h2>
@@ -10,6 +15,7 @@
     <input type="text" name="title">
 
     <input type='hidden' value='{{listing.pk}}' name='pk'>
+
 
 
     <h4>Choose category</h4>
@@ -28,7 +34,19 @@
     <input type="number" name="price">
 
     <h4>Photo</h4>
-    <input type="file"  accept="image/*" name="photo" id="file">
+
+    <input type="radio" onclick="javascript:imageFieldCheck();" name="photo" id="fileCheck" checked> File
+    <input type="radio" onclick="javascript:imageFieldCheck();"  id="urlCheck" name="photo"> Url 
+    
+    <div id="fileOption">
+        <input type="file"  accept="image/*" name="photo" id="file">
+        </div>
+    
+     <div id="urlOption" style="visibility:hidden">
+    <p>Or upload URL of Image</p>
+        <input type="text" name="image_url">
+        </div>
+
 
     <br>
     <h4>Auction ending date</h4>
@@ -45,4 +63,16 @@
 
 
 <a href="{% url 'index' %}"> Back to Home page</a>
+
+<script>
+    function imageFieldCheck() {
+      if (document.getElementById('urlCheck').checked) {
+          document.getElementById('urlOption').style.visibility = 'visible', document.getElementById('fileOption').style.visibility = 'hidden';
+        
+      }
+      else document.getElementById('urlOption').style.visibility = 'hidden', document.getElementById('fileOption').style.visibility = 'visible';
+  
+  }
+  </script>
+
 {% endblock %} 
