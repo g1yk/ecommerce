@@ -11,7 +11,7 @@ from django.utils import timezone
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 
-from .models import Category, Comment, ListingStatus, User, Listing, Watchlist
+from .models import Bid, Category, Comment, ListingStatus, User, Listing, Watchlist
 
 
 def index(request):
@@ -55,8 +55,16 @@ def listing(request, listing_id):
                 if listing.price >= bid:
                     message = "Your bid is lower than the last bid"
                 else:
-                    listing.price = bid
-                    listing.bidder = request.user
+                    Bid.objects.create(
+                        user=request.user,
+                        amount = bid,
+                        item = listing
+                    )
+                    last_bid = Bid.objects.latest('user')
+                    print(last_bid.user, last_bid.amount)
+
+                    listing.price = last_bid.amount
+                    listing.bidder = last_bid.user
                     listing.save()
 
                 return render(request, 'auctions/listing.html', {

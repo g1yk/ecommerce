@@ -12,12 +12,6 @@ class User(AbstractUser):
     pass
 
 
-class Bid(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=24, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.current_price} ({self.newBid})"
 
 
 class Category(models.Model):
@@ -38,8 +32,8 @@ class Listing(models.Model):
     description = models.CharField(max_length=256)
     price = models.DecimalField(max_digits=24, decimal_places=2)
     photo = models.CharField(max_length=1024, null=True)
-    bid = models.ForeignKey(
-        Bid, on_delete=models.CASCADE, blank=True, null=True)
+    # bid = models.ForeignKey(
+    #     Bid, on_delete=models.CASCADE, blank=True, null=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="users", default=1
     )
@@ -59,7 +53,16 @@ class Listing(models.Model):
 
     def __str__(self):
         return self.title
-        
+
+class Bid(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=24, decimal_places=2)
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_price", default=None)
+
+
+    def __str__(self):
+        return f"{self.item} ({self.amount}) by {self.user}"
+
 
 # class Image(models.Model):
 #     photo = models.ImageField(null=True)
