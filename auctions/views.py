@@ -27,6 +27,10 @@ def is_past_due(self):
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
+    if request.user.is_authenticated:
+        list = Watchlist.objects.filter(item=listing, user=request.user)
+    else:
+        list = None
     listing_status = ListingStatus.objects.get(listing=listing)
     message = ""
     comments = listing.comments.filter()
@@ -72,6 +76,7 @@ def listing(request, listing_id):
                 comment_form = CommentForm()
 
     return render(request, 'auctions/listing.html', {
+        'watchlist':list,
         'listing_status': listing_status,
         'days': days_left,
         "listing": listing,

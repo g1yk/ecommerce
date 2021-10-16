@@ -66,8 +66,13 @@
                             {% csrf_token %}
                             <!-- <input type="submit" value="Add watchlist"> -->
                             <!-- <button type="submit">(html content)</button> -->
+                            {% if user.is_authenticated %}  
+                                {% if not watchlist %}
                             <button type="submit" class="btn btn-info" name="add_watchlist">Add to watchlist</button>
-
+                                {% else %}
+                            <button type="submit" class="btn btn-danger" name="add_watchlist">Remove from watchlist</button>
+                                {% endif %}
+                            {% endif %}
 
                         </form>
                     </div>
