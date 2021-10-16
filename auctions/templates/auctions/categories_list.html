@@ -18,7 +18,7 @@
     {% for listing in listings %}
         <div class="card p-3 bg-white"><i class="fa fa-apple"></i>
 
-            <div class="about-product text-center mt-2"><img src="{{listing.photo.url}}" height="300" width="300">
+            <div class="about-product text-center mt-2"><img src="{{listing.photo}}" height="300" width="300">
                 <div>
                     <a href="{% url 'listing' listing.id %}">
                     <h4>{{ listing.title }}</h4></a>

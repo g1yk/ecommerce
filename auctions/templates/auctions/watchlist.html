@@ -16,13 +16,34 @@
 
     <h2>Go to <a href="{% url 'watchlist' %}">Watchlist</a></h2>
 
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3"> 
+        <div class="row">
         {% for listing in list %}
-            <ul>
+            <!-- <ul>
                 <li>${{listing.item.price}}</li>
-                <li><img src="{{listing.item.photo.url}}" weight=350px height=350px></li>
+                <li><img src="{{listing.item.photo}}" weight=350px height=350px></li>
                 <li>{{listing.item.description}}</li>
-                </ul>
+                </ul> -->
+
+
+
+                <div class="col-md-4 pb-5">
+                    <div class="card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-row align-items-center time"> </div> 
+                        </div>
+                        <div class="text-center"> <img src="{{listing.item.photo}}"  width="250" height="250"> </div>
+                        <div class="text-center">
+                            <a href="{% url 'listing' listing.item.id %}">
+                                <h4>{{ listing.item.title }}</h4>
+                            </a> <span class="text">Last bid: ${{listing.item.price}}</span>
+                        </div>
+                    </div>
+                </div>
         {% endfor %} 
+    </div>
+</div>
 
 {% endif %}
 

@@ -73,6 +73,7 @@ def listing(request, listing_id):
 
     return render(request, 'auctions/listing.html', {
         'listing_status': listing_status,
+        'days': days_left,
         "listing": listing,
         'comments': comments,
         'new_comment': new_comment
@@ -88,17 +89,16 @@ def add_comment(request):
 def add_listing(request):
     if request.method == "POST":
         category = request.POST.get("category")
-
         form = ListingForm(request.POST, request.FILES)
-        # print(form.is_valid())
         if form.is_valid():
-
             new_listing = form.save(commit=False)
             new_listing.seller = request.user
             new_listing.listing_status = "enabled"
+
             #  Applying time
             new_listing.end_date = new_listing.end_date.replace(hour=new_listing.created_at.hour, minute=new_listing.created_at.minute, second=new_listing.created_at.second)
             new_listing.category = Category.objects.get(name=category)
+
             new_listing.save()
 
             listing_status = ListingStatus(listing=new_listing, status="Enabled")
