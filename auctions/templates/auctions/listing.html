@@ -41,11 +41,12 @@
             <div class="col-md-7 product-info">
                 <h1 class="title">{{listing.title}}</h1>
                 <div class="description">{{listing.description}}</div>
+                        
+                <div class="price"> <p>The current bid is ${{listing.price}} made by {{listing.bidder}}</p></div>
                 <div class="bids">
                     {% if user.is_authenticated %}
                     <form action="" method="POST">
                         {% csrf_token %}
-                        <p>The current bid is ${{listing.price}} made by {{listing.bidder}}</p>
                         <p>Enter your Bid</p>
                         $ <input type="number" name="amount">
                         <input type="submit" value="Bid">
@@ -91,6 +92,8 @@
                 </div>
 
                 <div class="comments mt-5 ">
+                    {% if user.is_authenticated %}  
+
                     <h2>Add comment </h2>
 
                     <form action="" method="POST" name="body">
@@ -98,6 +101,8 @@
                         <input type="body" name="body">
                         <input type="submit" value="Post">
                     </form>
+                {% endif %}
+
 
                     <h2>Comments...</h2>
                     {% if not comments %}
@@ -113,6 +118,7 @@
                    <br> <a href="{% url 'index' %}"> Back to Home page</a>
 
                 </div>
+
             </div>
 
 

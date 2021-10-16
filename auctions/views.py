@@ -219,11 +219,11 @@ def categories(request):
 
 def categories_list(request, category):
     category_id = Category.objects.get(name=category).id
+    listings = Listing.objects.filter(category=category_id)
     
     return render(request, "auctions/categories_list.html", {
                 'listings':Listing.objects.filter(category=category_id),
-                 "statuses":ListingStatus.objects.filter(status="Enabled")   
-
+                 "statuses":ListingStatus.objects.filter(listing=listings)   
             })
 
 def logout_view(request):
